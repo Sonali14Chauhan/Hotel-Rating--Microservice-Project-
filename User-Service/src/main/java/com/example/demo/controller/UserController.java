@@ -1,0 +1,62 @@
+package com.example.demo.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.demo.entity.User;
+import com.example.demo.service.UserService;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/users")
+public class UserController {
+
+	@Autowired
+    private  UserService userService;
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    @PostMapping("/adduser")
+    public User createUser(@RequestBody User user) {
+        return userService.saveUser(user);
+    }
+
+    
+    
+    
+    
+    @GetMapping("/get")
+    public List<User> getAllUsers() {
+        return userService.getAllUser();
+    }
+
+    
+    int retryCount = 0;
+    
+    @GetMapping("/get/{userId}")
+   // @CircuitBreaker(name = "ratingHotelBreaker", fallbackMethod = "ratingHotelFallback")
+    //@Retry(name = "ratingHotelRetry" , fallbackMethod = "ratingHotelFallback")
+    public User getUser(@PathVariable String userId) {
+    	logger.info("Retry excute: {}" , retryCount+1);
+        return userService.getUser(userId);
+    }
+    
+    public User ratingHotelFallback(String UserId, Exception ex) {
+    	//logger.info("Fallback excute" +ex.getMessage());
+    	//logger.info("Retry excute" +ex.getMessage());
+    	User dummy = User.builder()
+    		.email("Dummay@gmail.com")
+    		.name("Dummy")
+    		.userId("1234")
+    		.build();
+		return dummy;
+    	
+    }
+}
+
