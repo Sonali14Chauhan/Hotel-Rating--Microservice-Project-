@@ -1,5 +1,5 @@
 # Hotel-Rating--Microservice-Project-
-A Spring Boot-based microservices application that allows users to view, add, and manage hotel ratings using a scalable and distributed architecture.
+A Java and Spring Boot-based microservices application that allows users to view, add, and manage hotel ratings using a scalable and distributed architecture.
 
 This project demonstrates real-world implementation of service communication, API Gateway, service discovery, and centralized configuration following industry best practices.
 
